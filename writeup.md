@@ -123,3 +123,5 @@ After the collection process, I had 16072 number of images and measurements. I t
 I finally randomly shuffled the data set and put 20% of the data into a validation set. 
 
 I used this training data for training the model. The validation set helped determine if the model was over or under fitting. The ideal number of epochs was 4 as the validation loss will decrease for the frist 4 epochs and then increase after four or five epochs. I used an adam optimizer so that manually training the learning rate wasn't necessary. The figure below showed the traing loss and validation loss after each of the epoch.
+
+![alt text](https://github.com/BillyZheLi/Clone-Driving-Behavior-Using-Deep-Learning/blob/master/selected%20images/Figure_1.png "Training and validation loss")
