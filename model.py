@@ -1,3 +1,4 @@
+import os
 import csv
 import cv2
 import numpy as np
@@ -10,28 +11,40 @@ with open('/opt/carnd_p3/data/driving_log.csv') as csvfile:
     next(reader, None)
     for line in reader:
         lines.append(line)
+        
+import sklearn        
+from sklearn.model_selection import train_test_split
+train_samples, validation_samples = train_test_split(lines, test_size=0.2)
 
-# creat list of images and corresponding measurements from log
-images = []
-measurements = []
-for line in lines:
-    current_path = '/opt/carnd_p3/data/' + line[0]
-    image = ndimage.imread(current_path)
-    images.append(image)
-    measurement = float(line[3])
-    measurements.append(measurement)
+def generator(samples, batch_size=32):
+    num_samples = len(samples)
+    while 1: # Loop forever so the generator never terminates
+        np.random.shuffle(samples)
+        for offset in range(0, num_samples, batch_size):
+            batch_samples = samples[offset:offset+batch_size]
 
-# augment images and measurements by flipping the iamge and negating the measurement
-augmented_images, augmented_measurements = [], []
-for image, measurement in zip(images, measurements):
-    augmented_images.append(image)
-    augmented_measurements.append(measurement)
-    augmented_images.append(cv2.flip(image,1))
-    augmented_measurements.append(measurement*-1)
+            images = []
+            angles = []
+            for batch_sample in batch_samples:
+                current_path = '/opt/carnd_p3/data/' + batch_sample[0]
+                center_image = ndimage.imread(current_path)       
+                center_angle = float(batch_sample[3])
+                images.append(center_image)
+                angles.append(center_angle)
+                images.append(cv2.flip(center_image,1))
+                angles.append(center_angle*-1)
 
-# convert features and labels into numpy array for training
-X_train = np.array(augmented_images)
-y_train = np.array(augmented_measurements)
+            # trim image to only see section with road
+            X_train = np.array(images)
+            y_train = np.array(angles)
+            yield sklearn.utils.shuffle(X_train, y_train)
+            
+# Set our batch size
+batch_size = 32
+
+# compile and train the model using the generator function
+train_generator = generator(train_samples, batch_size=batch_size)
+validation_generator = generator(validation_samples, batch_size=batch_size)
 
 # creat model using keras
 from keras.models import Sequential, Model
@@ -54,8 +67,24 @@ model.add(Dense(1))
 
 # train the model
 model.compile(loss='mse', optimizer='adam')
-model.fit(X_train, y_train, validation_split=0.2, shuffle=True, epochs=4)
+history_object = model.fit_generator(train_generator, \
+            steps_per_epoch=np.ceil(len(train_samples)/batch_size), \
+            validation_data=validation_generator, \
+            validation_steps=np.ceil(len(validation_samples)/batch_size), \
+            epochs=4, verbose=1)
 
 # save the model
 model.save('model.h5')
+
+import matplotlib.pyplot as plt
+
+# plot the training and validation loss for each epoch
+plt.plot(history_object.history['loss'])
+plt.plot(history_object.history['val_loss'])
+plt.title('model mean squared error loss')
+plt.ylabel('mean squared error loss')
+plt.xlabel('epoch')
+plt.legend(['training set', 'validation set'], loc='upper right')
+plt.show()
+
 exit()
