@@ -13,7 +13,7 @@ The steps of this project are the following:
 
 [//]: # (Image References)
 
-[image1]: ./examples/placeholder.png "Model Visualization"
+[image1]: ./selected images/center_2020_09_14_03_13_55_676.jpg "Model Visualization"
 [image2]: ./examples/placeholder.png "Grayscaling"
 [image3]: ./examples/placeholder_small.png "Recovery Image"
 [image4]: ./examples/placeholder_small.png "Recovery Image"
@@ -79,23 +79,40 @@ In order to gauge how well the model was working, I split my image and steering 
 
 To combat the overfitting, I modified the model such that only four epochs are used instead of ten epochs. I also collected more training data by recording one more lap of my driving one the track but in the opposite direction.
 
-The final step was to run the simulator to see how well the car was driving around track one. There were a few spots where the vehicle fell off the track... to improve the driving behavior in these cases, I ....
+The final step was to run the simulator to see how well the car was driving around track one. There were a few spots where the vehicle fell off the track around the curves. To improve the driving behavior in these cases, I collected more data where I deliberately drove to the side of the road, started recording, driving back to the center of the road, and stopped recording.
 
 At the end of the process, the vehicle is able to drive autonomously around the track without leaving the road.
 
 #### 2. Final Model Architecture
 
-The final model architecture (model.py lines 18-24) consisted of a convolution neural network with the following layers and layer sizes ...
+The final model architecture (model.py lines 54-66) consisted of a convolution neural network with the following layers and layer sizes.
 
-Here is a visualization of the architecture (note: visualizing the architecture is optional according to the project rubric)
-
-![alt text][image1]
+Layer | Description
+--- | --- 
+Input | 160 * 320 * 3 RGB file
+Normalization | Normalize to [-0.5, 0.5]
+Cropping | Crop top 60 and bottom 20 rows
+Convolution 5 * 5 | 2 * 2 strides, 24 filters
+Relu | 
+Convolution 5 * 5 | 2 * 2 strides, 36 filters
+Relu | 
+Convolution 5 * 5 | 2 * 2 strides, 48 filters
+Relu | 
+Convolution 3 * 3 | 1 * 1 strides, 64 filters
+Relu | 
+Convolution 3 * 3 | 1 * 1 strides, 64 filters
+Relu | 
+Flatten | 
+Fully connected | outputs 100 nodes
+Fully connected | outputs 50 nodes
+Fully connected | outputs 10 nodes
+Fully connected | outputs 1 nodes (the prediction)
 
 #### 3. Creation of the Training Set & Training Process
 
-To capture good driving behavior, I first recorded two laps on track one using center lane driving. Here is an example image of center lane driving:
+To capture good driving behavior, I first recorded one lap on track one using center lane driving. Here is an example image of center lane driving:
 
-![alt text][image2]
+![alt text][image1]
 
 I then recorded the vehicle recovering from the left side and right sides of the road back to center so that the vehicle would learn to .... These images show what a recovery looks like starting from ... :
 
@@ -103,18 +120,13 @@ I then recorded the vehicle recovering from the left side and right sides of the
 ![alt text][image4]
 ![alt text][image5]
 
-Then I repeated this process on track two in order to get more data points.
-
-To augment the data sat, I also flipped images and angles thinking that this would ... For example, here is an image that has then been flipped:
+To augment the data sat, I also flipped images and angles thinking that this would generalize the training set. For example, here is an image that has then been flipped:
 
 ![alt text][image6]
 ![alt text][image7]
 
-Etc ....
+After the collection process, I had 16072 number of images and measurements. I then preprocessed this data by normalizing each pixel to [-0.5,0.5] and then cropping the top 60 and botton 20 rows of each image.
 
-After the collection process, I had X number of data points. I then preprocessed this data by ...
+I finally randomly shuffled the data set and put 20% of the data into a validation set. 
 
-
-I finally randomly shuffled the data set and put Y% of the data into a validation set. 
-
-I used this training data for training the model. The validation set helped determine if the model was over or under fitting. The ideal number of epochs was Z as evidenced by ... I used an adam optimizer so that manually training the learning rate wasn't necessary.
+I used this training data for training the model. The validation set helped determine if the model was over or under fitting. The ideal number of epochs was 4 as the validation loss will decrease for the frist 4 epochs and then increase after four or five epochs. I used an adam optimizer so that manually training the learning rate wasn't necessary. The figure below showed the traing loss and validation loss after each of the epoch.
