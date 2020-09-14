@@ -11,16 +11,6 @@ The steps of this project are the following:
 * Tested that the model successfully drives around track one without leaving the road
 * Summarized the results with a written report
 
-[//]: # (Image References)
-
-[image1]: ./selected images/center_2020_09_14_03_13_55_676.jpg "Model Visualization"
-[image2]: ./examples/placeholder.png "Grayscaling"
-[image3]: ./examples/placeholder_small.png "Recovery Image"
-[image4]: ./examples/placeholder_small.png "Recovery Image"
-[image5]: ./examples/placeholder_small.png "Recovery Image"
-[image6]: ./examples/placeholder_small.png "Normal Image"
-[image7]: ./examples/placeholder_small.png "Flipped Image"
-
 ## Rubric Points
 ### Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/432/view) individually and describe how I addressed each point in my implementation.  
 
@@ -112,18 +102,21 @@ Fully connected | outputs 1 nodes (the prediction)
 
 To capture good driving behavior, I first recorded one lap on track one using center lane driving. Here is an example image of center lane driving:
 
-![alt text][image1]
+![alt text](https://github.com/BillyZheLi/Clone-Driving-Behavior-Using-Deep-Learning/blob/master/selected%20images/center_2020_09_14_03_13_55_676.jpg "Model Visualization")
 
-I then recorded the vehicle recovering from the left side and right sides of the road back to center so that the vehicle would learn to .... These images show what a recovery looks like starting from ... :
+I then recorded the vehicle recovering from the left side and right sides of the road back to center so that the vehicle would learn to recover if it drives off the center. These images show what a recovery (from right side) looks like
 
-![alt text][image3]
-![alt text][image4]
-![alt text][image5]
+![alt text](https://github.com/BillyZheLi/Clone-Driving-Behavior-Using-Deep-Learning/blob/master/selected%20images/center_2020_09_14_03_14_04_792.jpg "Recovery Image")
+![alt text](https://github.com/BillyZheLi/Clone-Driving-Behavior-Using-Deep-Learning/blob/master/selected%20images/center_2020_09_14_03_14_05_005.jpg "Recovery Image")
+![alt text](https://github.com/BillyZheLi/Clone-Driving-Behavior-Using-Deep-Learning/blob/master/selected%20images/center_2020_09_14_03_14_06_006.jpg "Recovery Image")
+![alt text](https://github.com/BillyZheLi/Clone-Driving-Behavior-Using-Deep-Learning/blob/master/selected%20images/center_2020_09_14_03_14_07_050.jpg "Recovery Image")
+![alt text](https://github.com/BillyZheLi/Clone-Driving-Behavior-Using-Deep-Learning/blob/master/selected%20images/center_2020_09_14_03_14_08_033.jpg "Recovery Image")
+![alt text](https://github.com/BillyZheLi/Clone-Driving-Behavior-Using-Deep-Learning/blob/master/selected%20images/center_2020_09_14_03_14_08_595.jpg "Recovery Image")
 
 To augment the data sat, I also flipped images and angles thinking that this would generalize the training set. For example, here is an image that has then been flipped:
 
-![alt text][image6]
-![alt text][image7]
+![alt text](https://github.com/BillyZheLi/Clone-Driving-Behavior-Using-Deep-Learning/blob/master/selected%20images/center_2020_09_14_03_14_11_344.jpg "Unflipped Image")
+![alt text](https://github.com/BillyZheLi/Clone-Driving-Behavior-Using-Deep-Learning/blob/master/selected%20images/center_2020_09_14_03_14_11_344_flipped.jpg "Flipped Image")
 
 After the collection process, I had 16072 number of images and measurements. I then preprocessed this data by normalizing each pixel to [-0.5,0.5] and then cropping the top 60 and botton 20 rows of each image.
 
